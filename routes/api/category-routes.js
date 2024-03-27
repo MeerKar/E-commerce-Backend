@@ -42,11 +42,16 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
+  const { category_name, products } = req.body;
+  if (!category_name) {
+    return res.status(400).json({ message: "category_name is required" });
+  }
   // create a new category
   try {
     const newCategory = await Category.create({
-      name: req.body.name,
+      category_name,
     });
+
     res.status(201).json(newCategory);
   } catch (err) {
     console.error(err);
@@ -54,48 +59,35 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
-  // update a category by its `id` value
-
-  try {
-    const [updated] = await Category.update(req.body, {
+router.put("/:id", (req, res) => {
+  Category.update(
+    {
+      category_name: req.body.category_name,
+    },
+    {
       where: {
         id: req.params.id,
       },
-    });
-
-    if (updated) {
-      const updatedCategory = await Category.findOne({
-        where: { id: req.params.id },
-      });
-      res.status(200).json(updatedCategory);
-    } else {
-      res.status(404).json({ message: "Category not found with this id!" });
     }
-  } catch (err) {
-    console.error(err);
-    res.status(500).json(err);
-  }
+  )
+    .then((updatedCategory) => {
+      res.json(updatedCategory);
+    })
+    .catch((err) => res.json(err));
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", (req, res) => {
   // delete a category by its `id` value
 
-  try {
-    const categoryDelete = await Category.destroy({
-      where: {
-        id: req.params.id,
-      },
-    });
-    if (categoryDelete > 0) {
-      res.status(200).json({ message: "Category deleted successfully." });
-    } else {
-      res.status(404).json({ message: "Category not found with this id!" });
-    }
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Internal server error." });
-  }
+  Category.destroy({
+    where: {
+      id: req.params.id,
+    },
+  })
+    .then((deletedCategory) => {
+      res.json(deletedCategory);
+    })
+    .catch((err) => res.json(err));
 });
 
 module.exports = router;
