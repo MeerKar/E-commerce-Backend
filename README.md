@@ -35,3 +35,9 @@ THEN I am able to successfully create, update, and delete data in my database
 ## Mock-Up
 
 The following animation shows the application's GET routes to return all categories, all products, and all tags being tested in Insomnia:
+
+
+
+[Untitled_ Mar 27, 2024 5_55 PM.webm](https://github.com/MeerKar/E-commerce-Backend/assets/116701851/616b6fa8-f192-48c1-8d20-61bdf80d84a8)
+
+
